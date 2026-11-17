@@ -1,1 +1,1 @@
-export const ROLES=['admin','analyst','viewer'];export const STATES=['queued','running','done','failed'];export const DECISIONS=['pending','valid','flagged'];export const LABELS=[0,1];
+export const ROLES=['admin','analyst','viewer'];export const STATES=['queued','running','done','failed','cancelled'];export const DECISIONS=['pending','valid','flagged'];export const LABELS=[0,1];export const WINDOW_STATES=['pending','done','failed'];export const TRIGGER_STATES=['fired','published','cancelled'];export const TRAINING_SOURCES=['manual','auto'];

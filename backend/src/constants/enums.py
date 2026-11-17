@@ -1,4 +1,7 @@
 ROLES=('admin','analyst','viewer')
-STATES=('queued','running','done','failed')
+STATES=('queued','running','done','failed','cancelled')
 DECISIONS=('pending','valid','flagged')
 LABELS=(0,1)
+WINDOW_STATES=('pending','done','failed')
+TRIGGER_STATES=('fired','published','cancelled')
+TRAINING_SOURCES=('manual','auto')

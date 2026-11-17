@@ -1,0 +1,45 @@
+-- Drift monitoring schema (002). Fresh installs get this from SQLAlchemy metadata at backend startup.
+-- For an existing database created by 001, apply:
+--   ALTER TABLE claims ADD COLUMN claimed_on DATE NULL;
+--   ALTER TABLE trainings ADD COLUMN source VARCHAR(10) NOT NULL DEFAULT 'manual';
+--   ALTER TABLE trainings ADD COLUMN trigger_id INTEGER NULL;
+--   CREATE TABLE drift_windows (
+--     id INTEGER PRIMARY KEY AUTO_INCREMENT,
+--     window_end DATE NOT NULL UNIQUE,
+--     baseline_training_id INTEGER NULL REFERENCES trainings(id),
+--     state VARCHAR(20) DEFAULT 'pending',
+--     alert BOOLEAN DEFAULT FALSE,
+--     revision INTEGER DEFAULT 0,
+--     pending_reason VARCHAR(30) DEFAULT 'scheduled',
+--     metrics JSON NULL,
+--     error TEXT,
+--     updated VARCHAR(40) DEFAULT ''
+--   );
+--   CREATE TABLE drift_runs (
+--     id INTEGER PRIMARY KEY AUTO_INCREMENT,
+--     window_id INTEGER NOT NULL REFERENCES drift_windows(id),
+--     revision INTEGER NOT NULL,
+--     reason VARCHAR(30) DEFAULT 'scheduled',
+--     baseline_training_id INTEGER NULL,
+--     alert BOOLEAN DEFAULT FALSE,
+--     metrics JSON NULL,
+--     error TEXT,
+--     created VARCHAR(40),
+--     CONSTRAINT uq_run_revision UNIQUE (window_id, revision)
+--   );
+--   CREATE TABLE drift_triggers (
+--     id INTEGER PRIMARY KEY AUTO_INCREMENT,
+--     training_id INTEGER NULL REFERENCES trainings(id),
+--     state VARCHAR(20) DEFAULT 'fired',
+--     round_open BOOLEAN DEFAULT TRUE,
+--     basis_window_ids JSON,
+--     streak_start DATE NULL,
+--     baseline_training_id INTEGER NULL,
+--     cancel_reason TEXT,
+--     created VARCHAR(40),
+--     updated VARCHAR(40) DEFAULT ''
+--   );
+--   CREATE TABLE drift_state (id INTEGER PRIMARY KEY);
+--   INSERT INTO drift_state (id) VALUES (1);
+-- Claims without claimed_on stay outside any window; backfill dates to include them.
+-- Exact portable schema: src/models/entities.py.
